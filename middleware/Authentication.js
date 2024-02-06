@@ -1,6 +1,6 @@
 import jwt from "jsonwebtoken";
-import User from "../mpdels/User.js";
-import bcrypt, { compare } from "bcrypt";
+import User from "../models/User.js";
+import bcrypt from "bcrypt";
 
 export const verifyToken = (req, res, next) => {
   const token = req.cookies.token;
