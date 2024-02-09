@@ -6,7 +6,7 @@ const contactRoutes = express.Router();
 
 contactRoutes.post("/create", contactController.createContact);
 
-contactRoutes.get("/", contactController.getContacts);
+contactRoutes.get("/all", contactController.getContacts);
 
 contactRoutes.delete("/:id", contactController.deleteContact);
 

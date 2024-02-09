@@ -2,9 +2,9 @@ import Contact from "../models/Contact.js";
 
 export const contactController = {
   createContact: async (req, res) => {
-    const { name, email, phone, message } = req.body;
+    const { name, email, phone, subject, message } = req.body;
     try {
-      const contact = await Contact.create({ name, email, phone, message });
+      const contact = await Contact.create({ name, email, phone, subject, message });
       if (contact) {
         return res.status(200).json(contact);
       } else {
