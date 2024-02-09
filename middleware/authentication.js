@@ -1,5 +1,5 @@
 import jwt from "jsonwebtoken";
-// import User from "../models/User.js";
+import User from "../models/User.js";
 import bcrypt from "bcrypt";
 
 export const verifyToken = (req, res, next) => {
@@ -80,6 +80,7 @@ export const login = async (req, res) => {
   }
 };
 
+// loggedInUser
 export const loggedInUser = async (req, res) => {
   try {
     const user = await User.findById(req.user._id);

@@ -1,13 +1,40 @@
 import express from "express";
+import session from 'express-session';
+import bodyParser from "body-parser";
+import cookieParser from "cookie-parser";
+import cors from "cors";
 import "dotenv/config";
 import connectDB from "./config/MongoConfig.js";
 import cityRoutes from "./routes/cityRoutes.js";
 import platformRoutes from "./routes/platformRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
-import contactRoutes from './routes/contactRoutes.js';
-import collaborationRoutes from './routes/collaborationRoutes.js';
+import contactRoutes from "./routes/contactRoutes.js";
+import collaborationRoutes from "./routes/collaborationRoutes.js";
+import { verifyToken } from "./middleware/authentication.js";
+import { login, logOut, loggedInUser } from "./middleware/authentication.js";
+import userRoutes from "./routes/userRoutes.js";
 
 const app = express();
+
+app.use(
+  session({
+    secret: "your-secret-key",
+    resave: false,
+    saveUninitialized: false,
+  })
+);
+
+const corsOption = {
+  origin: "http://localhost:3000",
+  credentials: true,
+  optionsSuccessStatus: 200,
+};
+
+app.use(cors(corsOption));
+app.use(cookieParser());
+app.use(express.json());
+app.use(bodyParser.urlencoded({ extended: true }));
+
 const PORT = process.env.PORT || 5000;
 app.use(express.json());
 
@@ -24,7 +51,6 @@ app.listen(PORT, (error) => {
 });
 connectDB();
 
-app.use("/images", express.static("Images"));
 
 app.use("/city", cityRoutes);
 app.use("/contact", contactRoutes);
@@ -32,3 +58,10 @@ app.use("/contact", contactRoutes);
 app.use("/platform", platformRoutes);
 app.use("/category", categoryRoutes);
 app.use("/collaboration", collaborationRoutes);
+
+app.use("/user", userRoutes);
+app.post("/login", login);
+app.post("/logout", logOut);
+app.get("/logged-in-user", verifyToken, loggedInUser);
+
+app.use("/images", express.static("Images"));

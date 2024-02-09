@@ -31,8 +31,8 @@ const Collaboration = new Schema(
     additional: {
       type: [
         {
-          name: { type: String, require: true },
-          detail: { type: String, require: true },
+          name: { type: String },
+          detail: { type: String },
         },
       ],
       required: true,
