@@ -3,6 +3,7 @@ import "dotenv/config";
 import connectDB from "./config/MongoConfig.js";
 import cityRoutes from "./routes/cityRoutes.js";
 import platformRoutes from "./routes/platformRoutes.js";
+import categoryRoutes from "./routes/categoryRoutes.js";
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -25,3 +26,4 @@ app.use("/images", express.static("Images"));
 
 app.use("/city", cityRoutes);
 app.use("/platform", platformRoutes);
+app.use("/category", categoryRoutes);
