@@ -4,7 +4,8 @@ import connectDB from "./config/MongoConfig.js";
 import cityRoutes from "./routes/cityRoutes.js";
 import platformRoutes from "./routes/platformRoutes.js";
 import categoryRoutes from "./routes/categoryRoutes.js";
-import contactRoutes from './routes/contactRoutes.js'
+import contactRoutes from './routes/contactRoutes.js';
+import collaborationRoutes from './routes/collaborationRoutes.js';
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -30,3 +31,4 @@ app.use("/contact", contactRoutes);
 
 app.use("/platform", platformRoutes);
 app.use("/category", categoryRoutes);
+app.use("/collaboration", collaborationRoutes);
