@@ -1,6 +1,6 @@
 import express from "express";
-import { cityController } from "../controllers/CityController.js";
-import { verifyToken, checkRole } from "../middleware/Authentication.js";
+import { cityController } from "../controllers/cityControllers.js";
+import { verifyToken, checkRole } from "../middleware/authentication.js";
 
 const cityRoutes = express.Router();
 

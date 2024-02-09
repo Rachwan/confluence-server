@@ -2,17 +2,21 @@ import mongoose from "mongoose";
 
 const Schema = mongoose.Schema;
 
-const Admin = new Schema(
+const Platform = new Schema(
   {
     name: {
       type: String,
       required: true,
     },
-    email: {
+    background: {
       type: String,
       required: true,
     },
-    password: {
+    icon: {
+      type: String,
+      required: true,
+    },
+    activeColor: {
       type: String,
       required: true,
     },
@@ -22,4 +26,4 @@ const Admin = new Schema(
   }
 );
 
-export default mongoose.model("Admin", Admin);
+export default mongoose.model("Platform", Platform);
