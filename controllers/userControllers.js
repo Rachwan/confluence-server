@@ -5,7 +5,9 @@ import jwt from "jsonwebtoken";
 export const userController = {
   // Register
   register: async (req, res) => {
-    const { name, email, password, role } = req.body;
+    const { name, email, password, number, role } = req.body;
+    const profileImagePath = req.files?.profile?.[0]?.path;
+    const backgroundImagePath = req.files?.background?.[0]?.path;
     try {
       if (!password || typeof password !== "string") {
         return res
@@ -21,6 +23,9 @@ export const userController = {
       const newUser = new User({
         name,
         email,
+        number,
+        profile: profileImagePath,
+        background: backgroundImagePath,
         password: hashedPassword,
         role: role || "influencer",
       });
@@ -76,8 +81,7 @@ export const userController = {
   // Update the user
   updateUserById: async (req, res) => {
     try {
-      const { name, password, oldPasswordInput, role } =
-        req.body;
+      const { name, password, oldPasswordInput, role } = req.body;
 
       if (password && (typeof password !== "string" || password.length === 0)) {
         return res

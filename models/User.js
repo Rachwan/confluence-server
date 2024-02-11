@@ -15,6 +15,15 @@ const User = new Schema({
         type: String,
         required: true,
     },
+    number: {
+        type: Number,
+    },
+    profile: {
+        type: String,
+    },
+    background: {
+        type: String,
+    },
     role: {
         type: String,
         enum: ['admin', 'influencer', 'business'],
