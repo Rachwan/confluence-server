@@ -18,6 +18,8 @@ import {
   verifyToken,
   addUserWithGoogle,
 } from "./middleware/authentication.js";
+import soonRoutes from "./routes/soonRoutes.js";
+import subscriberRoutes from "./routes/subscriberRoutes.js";
 
 const app = express();
 
@@ -57,6 +59,8 @@ connectDB();
 
 app.use("/city", cityRoutes);
 app.use("/contact", contactRoutes);
+app.use("/soon", soonRoutes);
+app.use("/subscriber", subscriberRoutes);
 
 app.use("/platform", platformRoutes);
 app.use("/category", categoryRoutes);
