@@ -1,6 +1,7 @@
 import User from "../models/User.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
+import fs from "fs";
 
 export const userController = {
   // Register
@@ -50,38 +51,21 @@ export const userController = {
     }
   },
 
-  // get one user
-  getOneUser: async (req, res) => {
-    const userId = req.user._id;
-    try {
-      const user = await User.findById(userId);
-      if (user) {
-        return res.status(200).json(user);
-      } else {
-        return res.status(404).json({ error: "User not found" });
-      }
-    } catch (error) {
-      console.log(error);
-      return res
-        .status(500)
-        .json({ error: "Internal Server Error" + error.message });
-    }
-  },
-
-  // Update all users
-  getAllUsers: async (req, res) => {
-    try {
-      const allUsers = await User.find();
-      return res.status(200).json(allUsers);
-    } catch (error) {
-      return res.status(500).json({ message: error.message });
-    }
-  },
-
   // Update the user
   updateUserById: async (req, res) => {
     try {
-      const { name, password, oldPasswordInput, role } = req.body;
+      const {
+        name,
+        email,
+        password,
+        age,
+        number,
+        platforms,
+        cityId,
+        categoryId,
+        oldPasswordInput,
+        role,
+      } = req.body;
 
       if (password && (typeof password !== "string" || password.length === 0)) {
         return res
@@ -113,10 +97,46 @@ export const userController = {
         ? await bcrypt.hash(password, 10)
         : undefined;
 
+      const profileImagePath = req.files?.profile?.[0]?.path;
+      const backgroundImagePath = req.files?.background?.[0]?.path;
+      // Delete old images
+      if (profileImagePath) {
+        if (user.profile) {
+          fs.unlinkSync(user.profile);
+        }
+      }
+
+      if (backgroundImagePath) {
+        if (user.background) {
+          fs.unlinkSync(user.background);
+        }
+      }
+      // Update platforms
+      // platofrms = [{platformId: , followers: }]
+      const platformsData = platforms
+        ? (user.platforms = platforms.map((platform) => ({
+            platformId: platform.platformId,
+            followers: platform.followers,
+          })))
+        : undefined;
+
+      // Update cityId and categoryId
+      // user.cityId = cityId;
+      // user.categoryId = categoryId;
+
       const updatedUser = await User.findByIdAndUpdate(
         req.params.id,
         {
           name,
+          email,
+          age,
+          number,
+          platforms: platformsData,
+          profile: profileImagePath,
+          background: backgroundImagePath,
+          profile: profileImagePath,
+          cityId,
+          categoryId,
           ...(hashedPassword && { password: hashedPassword }),
           role,
         },
@@ -126,6 +146,42 @@ export const userController = {
       );
 
       return res.status(200).json(updatedUser);
+    } catch (error) {
+      return res.status(500).json({ message: error.message });
+    }
+  },
+
+  // get one user
+  getOneUser: async (req, res) => {
+    const userId = req.user._id;
+    try {
+      const user = await User.findById(userId).populate([
+        "cityId",
+        "categoryId",
+        "platforms.platformId",
+      ]);
+      if (user) {
+        return res.status(200).json(user);
+      } else {
+        return res.status(404).json({ error: "User not found" });
+      }
+    } catch (error) {
+      console.log(error);
+      return res
+        .status(500)
+        .json({ error: "Internal Server Error" + error.message });
+    }
+  },
+
+  // Update all users
+  getAllUsers: async (req, res) => {
+    try {
+      const allUsers = await User.find().populate([
+        "cityId",
+        "categoryId",
+        "platforms.platformId",
+      ]);
+      return res.status(200).json(allUsers);
     } catch (error) {
       return res.status(500).json({ message: error.message });
     }
