@@ -42,4 +42,19 @@ userRoutes.delete(
 
 userRoutes.get("/read/one", verifyToken, userController.getOneUser);
 
+userRoutes.get("/get/:role", userController.getUsersByRole);
+
+userRoutes.post(
+  "/add/influencer",
+  uploadImage.fields([
+    { name: "background", maxCount: 1 },
+    { name: "profile", maxCount: 1 },
+  ]),
+  userController.adminAddInfluencer
+);
+
+userRoutes.get("/related/five", userController.getRelated);
+
+userRoutes.get("/filter/By", userController.getByFilter);
+
 export default userRoutes;

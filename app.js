@@ -32,7 +32,7 @@ app.use(
 );
 
 const corsOption = {
-  origin: "http://localhost:3000",
+  origin: ["http://localhost:3000", "http://localhost:3001"],
   credentials: true,
   optionsSuccessStatus: 200,
 };
@@ -72,4 +72,4 @@ app.post("/logout", logOut);
 app.get("/logged-in-user", verifyToken, loggedInUser);
 app.post("/googleauth", addUserWithGoogle);
 
-app.use("/images", express.static("Images"));
+app.use("/images", express.static("images"));
