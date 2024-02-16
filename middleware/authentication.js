@@ -83,7 +83,11 @@ export const login = async (req, res) => {
 // loggedInUser
 export const loggedInUser = async (req, res) => {
   try {
-    const user = await User.findById(req.user._id);
+    const user = await User.findById(req.user._id).populate([
+      "cityId",
+      "categoryId",
+      "platforms.platformId",
+    ]);
     if (!user) {
       return res.status(404).json({ error: "User not found" });
     }

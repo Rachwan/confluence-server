@@ -16,8 +16,20 @@ const Collaboration = new Schema(
       type: [String],
       required: true,
     },
-    images: {
-      type: [String],
+    firstImage: {
+      type: String,
+      required: true,
+    },
+    secondImage: {
+      type: String,
+      required: true,
+    },
+    thirdImage: {
+      type: String,
+      required: true,
+    },
+    fourthImage: {
+      type: String,
       required: true,
     },
     description: {

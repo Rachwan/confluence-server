@@ -4,12 +4,14 @@ import uploadImage from "../middleware/multer.js";
 
 const collaborationRoutes = Router();
 
-// Create a new collaboration
 collaborationRoutes.post(
   "/create",
   uploadImage.fields([
     { name: "background", maxCount: 1 },
-    { name: "images", maxCount: 4 },
+    { name: "firstImage", maxCount: 1 },
+    { name: "secondImage", maxCount: 1 },
+    { name: "thirdImage", maxCount: 1 },
+    { name: "fourthImage", maxCount: 1 },
   ]),
   collaborationController.createCollaboration
 );
@@ -20,7 +22,10 @@ collaborationRoutes.put(
   "/:id",
   uploadImage.fields([
     { name: "background", maxCount: 1 },
-    { name: "images", maxCount: 4 },
+    { name: "firstImage", maxCount: 1 },
+    { name: "secondImage", maxCount: 1 },
+    { name: "thirdImage", maxCount: 1 },
+    { name: "fourthImage", maxCount: 1 },
   ]),
   collaborationController.editCollaboration
 );
@@ -28,5 +33,10 @@ collaborationRoutes.put(
 collaborationRoutes.get("/:id", collaborationController.getCollaborationById);
 
 collaborationRoutes.delete("/:id", collaborationController.deleteCollaboration);
+
+collaborationRoutes.get(
+  "/usercollaborations/:userId",
+  collaborationController.getCollaborationsForUser
+);
 
 export default collaborationRoutes;
