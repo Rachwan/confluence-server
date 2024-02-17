@@ -172,18 +172,7 @@ export const userController = {
 
       const profileImagePath = req.files?.profile?.[0]?.path;
       const backgroundImagePath = req.files?.background?.[0]?.path;
-      // Delete old images
-      if (profileImagePath) {
-        if (user.profile) {
-          fs.unlinkSync(user.profile);
-        }
-      }
 
-      if (backgroundImagePath) {
-        if (user.background) {
-          fs.unlinkSync(user.background);
-        }
-      }
       // Update platforms
       const platformsData = platforms
         ? (user.platforms = platforms.map((platform) => ({
@@ -191,6 +180,23 @@ export const userController = {
             followers: platform.followers,
           })))
         : undefined;
+
+      // Delete old images
+      if (
+        profileImagePath &&
+        user.profile &&
+        user.profile !== profileImagePath
+      ) {
+        fs.unlinkSync(user.profile);
+      }
+
+      if (
+        backgroundImagePath &&
+        user.background &&
+        user.profile !== backgroundImagePath
+      ) {
+        fs.unlinkSync(user.background);
+      }
 
       const updatedUser = await User.findByIdAndUpdate(
         req.params.id,
