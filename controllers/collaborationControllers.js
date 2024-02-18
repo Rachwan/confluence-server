@@ -1,5 +1,6 @@
 import Collaboration from "../models/Collaboration.js";
 import User from "../models/User.js";
+import mongoose from "mongoose";
 
 export const collaborationController = {
   createCollaboration: async (req, res) => {
@@ -132,13 +133,43 @@ export const collaborationController = {
         return res.status(404).json({ error: "User not found" });
       }
 
-      const collaborations = await Collaboration.find({ userId }).populate([
-        "userId",
-      ]);
-
+      const collaborations = await Collaboration.find({ userId }).populate({
+        path: "userId",
+        populate: [
+          { path: "categoryId" },
+          { path: "cityId" },
+          { path: "platforms.platformId" },
+        ],
+      });
       res.status(200).json(collaborations);
     } catch (error) {
       console.error("Error fetching collaborations:", error);
+    }
+  },
+
+  getRelated: async (req, res) => {
+    try {
+      const { userId } = req.query;
+
+      const user = await User.findById(userId);
+      const userCategory = user.categoryId._id;
+
+      if (!userCategory) {
+        return res.status(404).json({ error: "User category not found" });
+      }
+
+      const collaborations = await Collaboration.find({
+        userId: userId,
+      })
+        .populate({
+          path: "userId",
+          match: { categoryId: userCategory },
+        })
+        .limit(5);
+      res.status(200).json(collaborations);
+    } catch (error) {
+      console.error("Error fetching collaborations:", error);
+      res.status(500).json({ error: "Internal Server Error" });
     }
   },
 };

@@ -314,17 +314,19 @@ export const userController = {
     }
   },
 
-  // Get Reltated users
+  // Get Related users
   getRelated: async (req, res) => {
-    const { category } = req.query;
-    const query = {};
-    if (category) {
-      query.category = category;
-    }
+    const { categoryId, userId } = req.query;
+
     try {
-      const users = await User.find(query)
+      const users = await User.find({
+        categoryId: categoryId,
+        role: "influencer",
+        _id: { $ne: userId },
+      })
         .limit(5)
         .populate(["categoryId", "cityId", "platforms.platformId"]);
+
       return res.status(200).json(users);
     } catch (error) {
       return res.status(404).json({ status: 400, error: error.message });
