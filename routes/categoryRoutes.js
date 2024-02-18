@@ -27,6 +27,8 @@ categoryRoutes.put(
 
 categoryRoutes.get("/:id", CategoryController.getCategoryById);
 
+categoryRoutes.get("/get/eight", CategoryController.getEightCategories);
+
 categoryRoutes.delete("/:id", CategoryController.deleteCategory);
 
 export default categoryRoutes;

@@ -88,4 +88,12 @@ export const CategoryController = {
       res.status(500).json({ message: "Internal Server Error" });
     }
   },
+  getEightCategories: async (req, res) => {
+    try {
+      const categories = await Category.find().limit(8);
+      return res.status(200).json(categories);
+    } catch (error) {
+      return res.status(404).json({ status: 400, error: error.message });
+    }
+  },
 };

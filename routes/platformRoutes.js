@@ -27,6 +27,8 @@ platformRoutes.put(
 
 platformRoutes.get("/:id", PlatformController.getPlatformById);
 
+platformRoutes.get("/get/eight", PlatformController.getEightPlatforms);
+
 platformRoutes.delete("/:id", PlatformController.deletePlatform);
 
 export default platformRoutes;

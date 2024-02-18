@@ -88,4 +88,13 @@ export const PlatformController = {
       res.status(500).json({ message: "Internal Server Error" });
     }
   },
+
+  getEightPlatforms: async (req, res) => {
+    try {
+      const platfroms = await Platform.find().limit(8);
+      return res.status(200).json(platfroms);
+    } catch (error) {
+      return res.status(404).json({ status: 400, error: error.message });
+    }
+  },
 };
