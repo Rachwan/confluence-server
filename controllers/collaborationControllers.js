@@ -158,14 +158,30 @@ export const collaborationController = {
         return res.status(404).json({ error: "User category not found" });
       }
 
-      const collaborations = await Collaboration.find({
-        userId: userId,
-      })
-        .populate({
-          path: "userId",
-          match: { categoryId: userCategory },
-        })
-        .limit(5);
+      const collaborations = await Collaboration.aggregate([
+        {
+          $lookup: {
+            from: "users",
+            localField: "userId",
+            foreignField: "_id",
+            as: "user",
+          },
+        },
+        {
+          $addFields: {
+            user: { $arrayElemAt: ["$user", 0] },
+          },
+        },
+        {
+          $match: {
+            "user.categoryId": new mongoose.Types.ObjectId(userCategory),
+            "userId": { $ne: new mongoose.Types.ObjectId(userId) },
+          },
+        },
+        {
+          $limit: 5,
+        },
+      ]);
       res.status(200).json(collaborations);
     } catch (error) {
       console.error("Error fetching collaborations:", error);
