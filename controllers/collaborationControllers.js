@@ -160,23 +160,27 @@ export const collaborationController = {
 
       const collaborations = await Collaboration.aggregate([
         {
+          $match: {
+            userId: { $ne: new mongoose.Types.ObjectId(userId) },
+          },
+        },
+        {
           $lookup: {
             from: "users",
-            localField: "userId",
-            foreignField: "_id",
-            as: "user",
+            let: { userId: "$userId" },
+            pipeline: [
+              {
+                $match: {
+                  $expr: { $eq: ["$_id", "$$userId"] },
+                  categoryId: new mongoose.Types.ObjectId(userCategory),
+                },
+              },
+            ],
+            as: "userId",
           },
         },
         {
-          $addFields: {
-            user: { $arrayElemAt: ["$user", 0] },
-          },
-        },
-        {
-          $match: {
-            "user.categoryId": new mongoose.Types.ObjectId(userCategory),
-            "userId": { $ne: new mongoose.Types.ObjectId(userId) },
-          },
+          $unwind: "$userId",
         },
         {
           $limit: 5,
