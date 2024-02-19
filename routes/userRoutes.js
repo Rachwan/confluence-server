@@ -45,12 +45,12 @@ userRoutes.get("/read/one", verifyToken, userController.getOneUser);
 userRoutes.get("/get/:role", userController.getUsersByRole);
 
 userRoutes.post(
-  "/add/influencer",
+  "/add/user",
   uploadImage.fields([
     { name: "background", maxCount: 1 },
     { name: "profile", maxCount: 1 },
   ]),
-  userController.adminAddInfluencer
+  userController.adminAddUsers
 );
 
 userRoutes.get("/related/five", userController.getRelated);

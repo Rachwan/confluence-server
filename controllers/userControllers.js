@@ -52,7 +52,7 @@ export const userController = {
   },
 
   // Admin add an influencer
-  adminAddInfluencer: async (req, res) => {
+  adminAddUsers: async (req, res) => {
     try {
       const {
         name,
@@ -63,12 +63,10 @@ export const userController = {
         platforms,
         cityId,
         categoryId,
+        role,
       } = req.body;
       const profileImagePath = req.files?.profile?.[0]?.path;
       const backgroundImagePath = req.files?.background?.[0]?.path;
-      console.log(profileImagePath, backgroundImagePath);
-
-      console.log("platforms", platforms);
 
       // Password + Check if the user alerady there
       if (!password || typeof password !== "string") {
@@ -101,7 +99,7 @@ export const userController = {
         password: hashedPassword,
         cityId,
         categoryId,
-        role: "influencer",
+        role,
       });
       await newUser.save();
 
