@@ -81,7 +81,14 @@ export const collaborationController = {
 
   getAllCollaborations: async (req, res) => {
     try {
-      const collaborations = await Collaboration.find().populate(["userId"]);
+      const collaborations = await Collaboration.find().populate({
+        path: "userId",
+        populate: [
+          { path: "categoryId" },
+          { path: "cityId" },
+          { path: "platforms.platformId" },
+        ],
+      });
       res.json(collaborations);
     } catch (error) {
       console.error(error);
@@ -94,7 +101,14 @@ export const collaborationController = {
       const collaborationId = req.params.id;
       const collaboration = await Collaboration.findById(
         collaborationId
-      ).populate(["userId"]);
+      ).populate({
+        path: "userId",
+        populate: [
+          { path: "categoryId" },
+          { path: "cityId" },
+          { path: "platforms.platformId" },
+        ],
+      });
       if (!collaboration) {
         return res.status(404).json({ message: "Collaboration not found" });
       }
@@ -189,6 +203,27 @@ export const collaborationController = {
       res.status(200).json(collaborations);
     } catch (error) {
       console.error("Error fetching collaborations:", error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  },
+
+  getNewestCollaborations: async (req, res) => {
+    try {
+      const newestCollaborations = await Collaboration.find()
+        .sort({ createdAt: -1 })
+        .limit(8)
+        .populate({
+          path: "userId",
+          populate: [
+            { path: "categoryId" },
+            { path: "cityId" },
+            { path: "platforms.platformId" },
+          ],
+        });
+
+      res.json(newestCollaborations);
+    } catch (error) {
+      console.error("Error fetching newest collaborations:", error);
       res.status(500).json({ error: "Internal Server Error" });
     }
   },

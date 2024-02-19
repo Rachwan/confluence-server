@@ -39,6 +39,11 @@ collaborationRoutes.get(
   collaborationController.getCollaborationsForUser
 );
 
+collaborationRoutes.get(
+  "/get/newesteight",
+  collaborationController.getNewestCollaborations
+);
+
 collaborationRoutes.get("/related/five", collaborationController.getRelated);
 
 export default collaborationRoutes;

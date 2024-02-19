@@ -298,6 +298,23 @@ export const userController = {
     }
   },
 
+  // Get the lastest 8 influencers
+  getNewestInfluencers: async (req, res) => {
+    try {
+      const role = "influencer";
+
+      const newestInfluencers = await User.find({ role })
+        .sort({ createdAt: -1 })
+        .limit(8)
+        .populate(["cityId", "categoryId", "platforms.platformId"]);
+
+      res.json(newestInfluencers);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  },
+
   // Delete a user by ID
   deleteUserById: async (req, res) => {
     try {

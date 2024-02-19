@@ -42,6 +42,7 @@ userRoutes.delete(
 
 userRoutes.get("/read/one", verifyToken, userController.getOneUser);
 
+userRoutes.get("/get/newesteight", userController.getNewestInfluencers);
 userRoutes.get("/get/:role", userController.getUsersByRole);
 
 userRoutes.post(
