@@ -38,6 +38,10 @@ collaborationRoutes.get(
   "/usercollaborations/:userId",
   collaborationController.getCollaborationsForUser
 );
+collaborationRoutes.get(
+  "/userfourcollaborations/:userId",
+  collaborationController.getFourCollaborationsForUser
+);
 
 collaborationRoutes.get(
   "/get/newesteight",

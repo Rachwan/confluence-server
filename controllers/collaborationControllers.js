@@ -164,6 +164,31 @@ export const collaborationController = {
       console.error("Error fetching collaborations:", error);
     }
   },
+  getFourCollaborationsForUser: async (req, res) => {
+    try {
+      const userId = req.params.userId;
+      const user = await User.findById(userId);
+
+      if (!user) {
+        return res.status(404).json({ error: "User not found" });
+      }
+
+      const collaborations = await Collaboration.find({ userId })
+        .sort({ createdAt: -1 })
+        .limit(4)
+        .populate({
+          path: "userId",
+          populate: [
+            { path: "categoryId" },
+            { path: "cityId" },
+            { path: "platforms.platformId" },
+          ],
+        });
+      res.status(200).json(collaborations);
+    } catch (error) {
+      console.error("Error fetching collaborations:", error);
+    }
+  },
 
   getRelated: async (req, res) => {
     try {
