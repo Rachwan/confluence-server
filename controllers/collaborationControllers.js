@@ -81,14 +81,16 @@ export const collaborationController = {
 
   getAllCollaborations: async (req, res) => {
     try {
-      const collaborations = await Collaboration.find().populate({
-        path: "userId",
-        populate: [
-          { path: "categoryId" },
-          { path: "cityId" },
-          { path: "platforms.platformId" },
-        ],
-      });
+      const collaborations = await Collaboration.find()
+        .sort({ createdAt: -1 })
+        .populate({
+          path: "userId",
+          populate: [
+            { path: "categoryId" },
+            { path: "cityId" },
+            { path: "platforms.platformId" },
+          ],
+        });
       res.json(collaborations);
     } catch (error) {
       console.error(error);
@@ -147,14 +149,16 @@ export const collaborationController = {
         return res.status(404).json({ error: "User not found" });
       }
 
-      const collaborations = await Collaboration.find({ userId }).populate({
-        path: "userId",
-        populate: [
-          { path: "categoryId" },
-          { path: "cityId" },
-          { path: "platforms.platformId" },
-        ],
-      });
+      const collaborations = await Collaboration.find({ userId })
+        .sort({ createdAt: -1 })
+        .populate({
+          path: "userId",
+          populate: [
+            { path: "categoryId" },
+            { path: "cityId" },
+            { path: "platforms.platformId" },
+          ],
+        });
       res.status(200).json(collaborations);
     } catch (error) {
       console.error("Error fetching collaborations:", error);

@@ -4,7 +4,13 @@ export const contactController = {
   createContact: async (req, res) => {
     const { name, email, phone, subject, message } = req.body;
     try {
-      const contact = await Contact.create({ name, email, phone, subject, message });
+      const contact = await Contact.create({
+        name,
+        email,
+        phone,
+        subject,
+        message,
+      });
       if (contact) {
         return res.status(200).json(contact);
       } else {
@@ -19,7 +25,7 @@ export const contactController = {
 
   getContacts: async (req, res) => {
     try {
-      const contacts = await Contact.find();
+      const contacts = await Contact.find().sort({ createdAt: -1 });
       if (!contacts) {
         return res.status(400).json("Contacts Not Found");
       }

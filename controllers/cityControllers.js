@@ -1,4 +1,4 @@
-import City from '../models/City.js';
+import City from "../models/City.js";
 
 export const cityController = {
   createCity: async (req, res) => {
@@ -15,7 +15,7 @@ export const cityController = {
 
   getAllCities: async (req, res) => {
     try {
-      const cities = await City.find();
+      const cities = await City.find().sort({ createdAt: -1 });
       if (!cities) {
         return res.status(404).json({ error: "There is no cities yet." });
       }

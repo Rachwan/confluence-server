@@ -25,7 +25,7 @@ export const PlatformController = {
 
   getAllPlatforms: async (req, res) => {
     try {
-      const platforms = await Platform.find();
+      const platforms = await Platform.find().sort({ createdAt: -1 });
       res.json(platforms);
     } catch (error) {
       console.error(error);

@@ -1,4 +1,4 @@
-import Soon from '../models/Soon.js';
+import Soon from "../models/Soon.js";
 
 export const soonController = {
   createSoon: async (req, res) => {
@@ -15,7 +15,7 @@ export const soonController = {
 
   getAllSoon: async (req, res) => {
     try {
-      const soon = await Soon.find();
+      const soon = await Soon.find().sort({ createdAt: -1 });
       if (!soon) {
         return res.status(404).json({ error: "There is no Soon emails yet." });
       }

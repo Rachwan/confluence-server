@@ -25,7 +25,7 @@ export const CategoryController = {
 
   getAllCategories: async (req, res) => {
     try {
-      const categories = await Category.find();
+      const categories = await Category.find().sort({ createdAt: -1 });
       res.json(categories);
     } catch (error) {
       console.error(error);

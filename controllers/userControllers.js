@@ -51,7 +51,7 @@ export const userController = {
     }
   },
 
-  // Admin add an influencer
+  // Admin add users
   adminAddUsers: async (req, res) => {
     try {
       const {
@@ -247,11 +247,9 @@ export const userController = {
   // Get all users
   getAllUsers: async (req, res) => {
     try {
-      const allUsers = await User.find().populate([
-        "cityId",
-        "categoryId",
-        "platforms.platformId",
-      ]);
+      const allUsers = await User.find()
+        .sort({ createdAt: -1 })
+        .populate(["cityId", "categoryId", "platforms.platformId"]);
       return res.status(200).json(allUsers);
     } catch (error) {
       return res.status(500).json({ message: error.message });
@@ -285,11 +283,9 @@ export const userController = {
         return res.status(400).json({ error: "Invalid role provided" });
       }
 
-      const users = await User.find({ role }).populate([
-        "cityId",
-        "categoryId",
-        "platforms.platformId",
-      ]);
+      const users = await User.find({ role })
+        .sort({ createdAt: -1 })
+        .populate(["cityId", "categoryId", "platforms.platformId"]);
 
       res.json(users);
     } catch (error) {

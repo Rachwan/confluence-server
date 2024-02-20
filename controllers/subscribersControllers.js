@@ -15,7 +15,7 @@ export const subscribersController = {
 
   getAllSubscribers: async (req, res) => {
     try {
-      const allSubscribers = await Subscribers.find();
+      const allSubscribers = await Subscribers.find().sort({ createdAt: -1 });
       if (!allSubscribers) {
         return res
           .status(404)
