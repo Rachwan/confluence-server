@@ -311,6 +311,22 @@ export const userController = {
     }
   },
 
+  // Get the lastest 5 businesses
+  getNewestBusinesses: async (req, res) => {
+    try {
+      const role = "business";
+
+      const newestBusinesses = await User.find({ role })
+        .sort({ createdAt: -1 })
+        .limit(5);
+
+      res.json(newestBusinesses);
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ error: "Internal Server Error" });
+    }
+  },
+
   // Delete a user by ID
   deleteUserById: async (req, res) => {
     try {
