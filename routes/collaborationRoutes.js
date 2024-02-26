@@ -39,7 +39,7 @@ collaborationRoutes.get(
   collaborationController.getCollaborationsForUser
 );
 collaborationRoutes.get(
-  "/userfourcollaborations/:userId",
+  "/userfourcollaborations/:userId/:collabId",
   collaborationController.getFourCollaborationsForUser
 );
 

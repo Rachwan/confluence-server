@@ -36,10 +36,6 @@ const Collaboration = new Schema(
       type: String,
       required: true,
     },
-    singleTitle: {
-      type: String,
-      required: true,
-    },
     additional: {
       type: [
         {

@@ -1,5 +1,5 @@
 import User from "../models/User.js";
-import bcrypt from "bcrypt";
+import bcrypt, { compareSync } from "bcrypt";
 import jwt from "jsonwebtoken";
 import fs from "fs";
 
@@ -59,6 +59,7 @@ export const userController = {
         email,
         password,
         age,
+        gender,
         number,
         platforms,
         cityId,
@@ -85,15 +86,24 @@ export const userController = {
         ? platforms.map((platform) => ({
             platformId: platform.platformId,
             followers: platform.followers,
+            link: platform.link,
           }))
         : undefined;
+
+      const totalFollowers = platforms.reduce(
+        (sum, platform) => sum + BigInt(platform.followers),
+        BigInt(0)
+      );
+      const totalFollowersNumber = Number(totalFollowers);
 
       const newUser = new User({
         name,
         email,
         age,
+        gender,
         number,
         platforms: platformsData,
+        totalFollowers: totalFollowersNumber,
         profile: profileImagePath,
         background: backgroundImagePath,
         password: hashedPassword,
@@ -130,6 +140,7 @@ export const userController = {
         email,
         password,
         age,
+        gender,
         number,
         platforms,
         cityId,
@@ -176,8 +187,15 @@ export const userController = {
         ? (user.platforms = platforms.map((platform) => ({
             platformId: platform.platformId,
             followers: platform.followers,
+            link: platform.link,
           })))
         : undefined;
+
+      const totalFollowers = platforms.reduce(
+        (sum, platform) => sum + BigInt(platform.followers),
+        BigInt(0)
+      );
+      const totalFollowersNumber = Number(totalFollowers);
 
       // Delete old images
       if (
@@ -202,8 +220,10 @@ export const userController = {
           name,
           email,
           age,
+          gender,
           number,
           platforms: platformsData,
+          totalFollowers: totalFollowersNumber,
           background: backgroundImagePath,
           profile: profileImagePath,
           cityId,
@@ -373,51 +393,68 @@ export const userController = {
   getByFilter: async (req, res) => {
     try {
       const { categories, platformId, platformRange, cities, totalRange } =
-        req.body;
-      const conditions = [];
+        req.query;
+
+      // Conditions
+      const conditionsArray = [];
+
+      // Categories
       if (categories && categories.length > 0) {
-        conditions.push({ categoryId: { $in: categories } }); // categories (platforms,cities) categoryId $in categories
-      }
-      if (cities && cities.length > 0) {
-        conditions.push({ categoryId: { $in: cities } }); // categories (platforms,cities) categoryId $in categories
+        conditionsArray.push({ categoryId: { $in: categories } });
       }
 
-      if (platformId && platformRange) {
-        conditions.push({
-          platforms: {
-            $elemMatch: {
-              platformId: platformId,
-              followers: {
-                $gte: Number(platformRange[0]),
-                $lte: Number(platformRange[1]),
+      // Cities
+      if (cities && cities.length > 0) {
+        conditionsArray.push({ cityId: { $in: cities } });
+      }
+
+      // platforms
+
+      if (platformId && platformRange && platformRange.length > 0) {
+        const totalRangeForPlatforms = {
+          "<10K": { followers: { $lt: 10000 } },
+          "10K-100K": { followers: { $gte: 10000, $lt: 100000 } },
+          "100K-500K": { followers: { $gte: 100000, $lt: 500000 } },
+          "500K-1M": { followers: { $gte: 500000, $lt: 1000000 } },
+          "1M+": { followers: { $gte: 1000000 } },
+        };
+        const platformConditions = {
+          $or: platformRange.map((range) => ({
+            platforms: {
+              $elemMatch: {
+                platformId: platformId,
+                ...totalRangeForPlatforms[range],
               },
             },
-          },
-        });
+          })),
+        };
+        conditionsArray.push(platformConditions);
       }
+
+      // Total followers
+
+      const totalRangeConditions = {
+        "<10K": { totalFollowers: { $lt: 10000 } },
+        "10K-100K": { totalFollowers: { $gte: 10000, $lt: 100000 } },
+        "100K-500K": { totalFollowers: { $gte: 100000, $lt: 500000 } },
+        "500K-1M": { totalFollowers: { $gte: 500000, $lt: 1000000 } },
+        "1M+": { totalFollowers: { $gte: 1000000 } },
+      };
 
       if (totalRange && totalRange.length > 0) {
-        const totalConditions = [];
-        totalRange.forEach((range) => {
-          if (Number(range) === 1) {
-            totalConditions.push({ total: { $gt: 0, $lte: 15 } });
-          }
-          if (Number(range) === 2) {
-            totalConditions.push({ total: { $gt: 15, $lte: 30 } });
-          }
-
-          if (Number(range) === 3) {
-            totalConditions.push({ total: { $gt: 30, $lte: 45 } });
-          }
-          if (Number(range) === 4) {
-            totalConditions.push({ total: { $gt: 45 } });
-          }
-        });
-        conditions.push({ $or: totalConditions });
+        console.log("totalRange", totalRange);
+        const totalConditions = totalRange.map(
+          (range) => totalRangeConditions[range]
+        );
+        conditionsArray.push({ $or: totalConditions });
       }
+
+      // Final
+
       const users = await User.find({
-        $and: conditions,
-      });
+        role: "influencer",
+        $and: conditionsArray,
+      }).populate(["categoryId", "cityId", "platforms.platformId"]);
 
       res.status(200).json(users);
     } catch (error) {

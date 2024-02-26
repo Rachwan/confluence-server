@@ -5,8 +5,7 @@ import mongoose from "mongoose";
 export const collaborationController = {
   createCollaboration: async (req, res) => {
     try {
-      const { title, platforms, description, singleTitle, additional, userId } =
-        req.body;
+      const { title, platforms, description, additional, userId } = req.body;
       const backgroundImagePath = req.files?.background?.[0]?.path;
 
       const firstImagePath = req.files?.firstImage?.[0]?.path;
@@ -24,7 +23,6 @@ export const collaborationController = {
         thirdImage: thirdImagePath,
         fourthImage: fourthImagePath,
         description,
-        singleTitle,
         additional,
         userId,
       });
@@ -39,8 +37,7 @@ export const collaborationController = {
 
   editCollaboration: async (req, res) => {
     try {
-      const { title, platforms, description, singleTitle, additional } =
-        req.body;
+      const { title, platforms, description, additional } = req.body;
       const backgroundImagePath = req.files?.background?.[0]?.path;
 
       const firstImagePath = req.files?.firstImage?.[0]?.path;
@@ -63,7 +60,6 @@ export const collaborationController = {
           thirdImage: thirdImagePath,
           fourthImage: fourthImagePath,
           description,
-          singleTitle,
           additional,
         },
         { new: true }
@@ -167,13 +163,18 @@ export const collaborationController = {
   getFourCollaborationsForUser: async (req, res) => {
     try {
       const userId = req.params.userId;
+      const collabId = req.params.collabId;
+
       const user = await User.findById(userId);
 
       if (!user) {
         return res.status(404).json({ error: "User not found" });
       }
 
-      const collaborations = await Collaboration.find({ userId })
+      const collaborations = await Collaboration.find({
+        userId,
+        _id: { $ne: collabId },
+      })
         .sort({ createdAt: -1 })
         .limit(4)
         .populate({
@@ -184,6 +185,7 @@ export const collaborationController = {
             { path: "platforms.platformId" },
           ],
         });
+
       res.status(200).json(collaborations);
     } catch (error) {
       console.error("Error fetching collaborations:", error);

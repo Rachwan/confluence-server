@@ -19,6 +19,9 @@ const User = new Schema(
     age: {
       type: Number,
     },
+    gender: {
+      type: String,
+    },
     number: {
       type: Number,
     },
@@ -40,12 +43,20 @@ const User = new Schema(
           required: true,
           ref: "Platform",
         },
+        link: {
+          type: String,
+          required: true,
+        },
         followers: {
           type: Number,
           required: true,
         },
       },
     ],
+    totalFollowers: {
+      type: Number,
+      default: 0,
+    },
     cityId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "City",

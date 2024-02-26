@@ -59,6 +59,6 @@ userRoutes.post(
 
 userRoutes.get("/related/five", userController.getRelated);
 
-userRoutes.get("/filter/By", userController.getByFilter);
+userRoutes.get("/get/By/Filter", userController.getByFilter);
 
 export default userRoutes;
