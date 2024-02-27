@@ -1,6 +1,7 @@
-import jwt from "jsonwebtoken";
+import jwt, { decode } from "jsonwebtoken";
 import User from "../models/User.js";
 import bcrypt from "bcrypt";
+import nodemailer from "nodemailer";
 
 export const verifyToken = (req, res, next) => {
   const token = req.cookies.token;
@@ -157,5 +158,95 @@ export const addUserWithGoogle = async (req, res, next) => {
     }
   } catch (error) {
     return res.status(404).json(error.message);
+  }
+};
+
+export const forgetPassword = async (req, res) => {
+  const { email } = req.body;
+
+  try {
+    const user = await User.findOne({ email });
+
+    if (!user) {
+      return res.status(401).json({ error: "User Not Found" });
+    }
+
+    const token = jwt.sign({ _id: user._id }, process.env.SECRET_TOKEN, {
+      expiresIn: "24h",
+    });
+
+    // Create a Nodemailer transporter
+    const transporter = nodemailer.createTransport({
+      service: "gmail",
+      auth: {
+        user: "rachwan.harb2023@gmail.com",
+        pass: "lbxf bgue xdir smsw",
+      },
+    });
+
+    // Construct email options
+    const mailOptions = {
+      from: "rachwan.harb2023@gmail.com",
+      to: user.email,
+      subject: "Reset your password",
+      text: `Click the following link to reset your password: http://localhost:3000/reset-password/${user._id}/${token}`,
+    };
+
+    // Send the email
+    const info = await transporter.sendMail(mailOptions);
+
+    console.log("Email sent:", info.response);
+    return res.status(200).json({ message: "Email sent successfully!" });
+  } catch (error) {
+    console.error("Error sending email:", error);
+    return res.status(500).json({ error: "Internal Server Error" });
+  }
+};
+
+export const resetPassword = async (req, res) => {
+  try {
+    const { id, token } = req.query;
+    const { password } = req.body;
+    console.log(id, token, password);
+    console.log("helloooo");
+
+    if (password && (typeof password !== "string" || password.length === 0)) {
+      return res
+        .status(400)
+        .json({ message: "Invalid password in the request body" });
+    }
+
+    const user = await User.findById(id);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    jwt.verify(token, process.env.SECRET_TOKEN, async (err) => {
+      if (err) {
+        return res.status(500).json({ message: "Error with the token!", err });
+      } else {
+        const hashedPassword = password
+          ? await bcrypt.hash(password, 10)
+          : undefined;
+
+        const updatedUser = await User.findByIdAndUpdate(
+          id,
+          {
+            ...(hashedPassword && { password: hashedPassword }),
+          },
+          {
+            new: true,
+          }
+        );
+        if (updatedUser) {
+          return res.status(200).json({ message: "Updated" });
+        } else {
+          return res.status(500).json({ message: "error Updated" });
+        }
+      }
+    });
+  } catch (error) {
+    return res.status(500).json({ message: error.message });
   }
 };

@@ -21,7 +21,7 @@ userRoutes.get(
   userController.getAllUsers
 );
 
-userRoutes.get("/:id", verifyToken, userController.getUserById);
+userRoutes.get("/:id", userController.getUserById);
 
 userRoutes.put(
   "/:id",

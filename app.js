@@ -17,6 +17,8 @@ import {
   loggedInUser,
   verifyToken,
   addUserWithGoogle,
+  forgetPassword,
+  resetPassword,
 } from "./middleware/authentication.js";
 import soonRoutes from "./routes/soonRoutes.js";
 import subscriberRoutes from "./routes/subscriberRoutes.js";
@@ -71,5 +73,7 @@ app.post("/login", login);
 app.post("/logout", logOut);
 app.get("/logged-in-user", verifyToken, loggedInUser);
 app.post("/googleauth", addUserWithGoogle);
+app.post("/forget-password", forgetPassword);
+app.put("/reset/password", resetPassword);
 
 app.use("/images", express.static("images"));
