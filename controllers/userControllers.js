@@ -394,7 +394,8 @@ export const userController = {
     try {
       const { categories, platformId, platformRange, cities, totalRange } =
         req.query;
-
+      console.log(req.query);
+      console.log(categories);
       // Conditions
       const conditionsArray = [];
 
@@ -451,9 +452,12 @@ export const userController = {
 
       // Final
 
+      const queryCondition =
+        conditionsArray.length > 0 ? { $and: conditionsArray } : {};
+
       const users = await User.find({
         role: "influencer",
-        $and: conditionsArray,
+        ...queryCondition,
       }).populate(["categoryId", "cityId", "platforms.platformId"]);
 
       res.status(200).json(users);
