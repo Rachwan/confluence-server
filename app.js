@@ -34,7 +34,11 @@ app.use(
 );
 
 const corsOption = {
-  origin: ["http://localhost:3000", "http://localhost:3001"],
+  origin: [
+    "http://localhost:3000",
+    "http://localhost:3001",
+    "https://confluence-4sbwkrer8-rachwan-harbs-projects.vercel.app",
+  ],
   credentials: true,
   optionsSuccessStatus: 200,
 };
