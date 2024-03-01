@@ -7,11 +7,7 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "start": "nodemon app.js",
-<<<<<<< HEAD
     "build": "npm install"
-=======
-    "build" : "npm install"
->>>>>>> c12a9e1995bf6ad67907781b91487891b54180bb
   },
   "keywords": [],
   "author": "",
