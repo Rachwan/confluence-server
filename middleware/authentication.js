@@ -70,7 +70,7 @@ export const login = async (req, res) => {
     return res
       .cookie("token", token, {
         httpOnly: true,
-        secure: true,
+        secure: process.env.NODE_ENV === "production",
         sameSite: "None",
       })
       .status(200)

@@ -38,6 +38,8 @@ const corsOption = {
     "http://localhost:3000",
     "http://localhost:3001",
     process.env.FRONTEND_ORIGIN,
+    "https://confluence-8fmfrodru-rachwan-harbs-projects.vercel.app",
+    "https://confluence-client.vercel.app",
   ],
   credentials: true,
   optionsSuccessStatus: 200,
