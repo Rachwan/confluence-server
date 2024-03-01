@@ -40,7 +40,7 @@ const corsOption = {
     process.env.FRONTEND_ORIGIN,
     "https://confluence-8fmfrodru-rachwan-harbs-projects.vercel.app",
     "https://confluence-client.vercel.app",
-    "confluence-k6a850yw0-rachwan-harbs-projects.vercel.app",
+    "https://confluence-k6a850yw0-rachwan-harbs-projects.vercel.app",
   ],
   credentials: true,
   optionsSuccessStatus: 200,
