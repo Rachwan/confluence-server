@@ -5,6 +5,7 @@ import nodemailer from "nodemailer";
 
 export const verifyToken = (req, res, next) => {
   const token = req.cookies.token;
+  console.log(req.cookies);
   if (!token) {
     return res.status(401).json({ error: "Unauthorized - Missing token" });
   }
@@ -70,7 +71,7 @@ export const login = async (req, res) => {
     return res
       .cookie("token", token, {
         httpOnly: true,
-        secure: process.env.NODE_ENV === "production",
+        secure: false,
         sameSite: "None",
       })
       .status(200)
