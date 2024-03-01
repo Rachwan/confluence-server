@@ -111,6 +111,7 @@ export const logOut = (req, res) => {
       path: "/",
       secure: true,
       httpOnly: true,
+      sameSite: "None",
     })
     .status(200)
     .json({ message: "Successfully Logged Out!" });
