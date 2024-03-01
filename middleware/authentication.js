@@ -106,7 +106,12 @@ export const loggedInUser = async (req, res) => {
 export const logOut = (req, res) => {
   console.log("helloooo");
   return res
-    .clearCookie("token", { domain: ".vercel.app", path: "/" })
+    .clearCookie("token", {
+      domain: ".vercel.app",
+      path: "/",
+      secure: true,
+      httpOnly: true,
+    })
     .status(200)
     .json({ message: "Successfully Logged Out!" });
 };
