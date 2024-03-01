@@ -39,13 +39,9 @@ const corsOption = {
     "http://localhost:3001",
     "https://confluence-client.vercel.app",
     "https://confluence-server.onrender.com",
-    // process.env.FRONTEND_ORIGIN,
-    // "https://confluence-8fmfrodru-rachwan-harbs-projects.vercel.app",
-    // "https://confluence-k6a850yw0-rachwan-harbs-projects.vercel.app",
   ],
   credentials: true,
   optionsSuccessStatus: 200,
-  // exposedHeaders: ["set-cookie"],
 };
 
 app.use(cors(corsOption));

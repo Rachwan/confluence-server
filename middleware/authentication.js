@@ -5,9 +5,6 @@ import nodemailer from "nodemailer";
 
 export const verifyToken = (req, res, next) => {
   const token = req.cookies.token;
-  console.log("req.cookies", req.cookies);
-  console.log("*********************");
-  console.log("req.cookies.token", req.cookies.token);
   if (!token) {
     return res.status(401).json({ error: "Unauthorized - Missing token" });
   }
