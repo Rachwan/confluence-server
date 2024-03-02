@@ -194,7 +194,7 @@ export const forgetPassword = async (req, res) => {
       from: "rachwan.harb2023@gmail.com",
       to: user.email,
       subject: "Reset your password",
-      text: `Click the following link to reset your password: http://localhost:3000/reset-password/${user._id}/${token}`,
+      text: `Click the following link to reset your password: ${process.env.HOSTED_WEBSITE}/reset-password/${user._id}/${token}`,
     };
 
     // Send the email
