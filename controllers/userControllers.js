@@ -82,19 +82,36 @@ export const userController = {
       const saltRounds = 10;
       const hashedPassword = await bcrypt.hash(password, saltRounds);
 
-      const platformsData = platforms
-        ? platforms.map((platform) => ({
-            platformId: platform.platformId,
-            followers: platform.followers,
-            link: platform.link,
-          }))
-        : undefined;
+      // const platformsData = platforms
+      //   ? platforms.map((platform) => ({
+      //     platformId: platform.platformId,
+      //     followers: platform.followers,
+      //     link: platform.link,
+      //   }))
+      //   : undefined;
 
-      const totalFollowers = platforms.reduce(
-        (sum, platform) => sum + BigInt(platform.followers),
-        BigInt(0)
-      );
-      const totalFollowersNumber = Number(totalFollowers);
+      // const totalFollowers = platforms.reduce(
+      //   (sum, platform) => sum + BigInt(platform.followers),
+      //   BigInt(0)
+      // );
+      // const totalFollowersNumber = Number(totalFollowers);
+      // Update platforms and totalFollowers only if the platforms array is present
+      let platformsData;
+      let totalFollowersNumber;
+
+      if (platforms) {
+        platformsData = platforms.map((platform) => ({
+          platformId: platform.platformId,
+          followers: platform.followers,
+          link: platform.link,
+        }));
+
+        const totalFollowers = platforms.reduce(
+          (sum, platform) => sum + BigInt(platform.followers),
+          BigInt(0)
+        );
+        totalFollowersNumber = Number(totalFollowers);
+      }
 
       const newUser = new User({
         name,
@@ -182,20 +199,39 @@ export const userController = {
       const profileImagePath = req.files?.profile?.[0]?.path;
       const backgroundImagePath = req.files?.background?.[0]?.path;
 
-      // Update platforms
-      const platformsData = platforms
-        ? (user.platforms = platforms.map((platform) => ({
-            platformId: platform.platformId,
-            followers: platform.followers,
-            link: platform.link,
-          })))
-        : undefined;
+      // // Update platforms
 
-      const totalFollowers = platforms.reduce(
-        (sum, platform) => sum + BigInt(platform.followers),
-        BigInt(0)
-      );
-      const totalFollowersNumber = Number(totalFollowers);
+      // const platformsData = platforms
+      //   ? (user.platforms = platforms.map((platform) => ({
+      //       platformId: platform.platformId,
+      //       followers: platform.followers,
+      //       link: platform.link,
+      //     })))
+      //   : undefined;
+
+      // const totalFollowers = platforms.reduce(
+      //   (sum, platform) => sum + BigInt(platform.followers),
+      //   BigInt(0)
+      // );
+      // const totalFollowersNumber = Number(totalFollowers);
+
+      // Update platforms and totalFollowers only if the platforms array is present
+      let platformsData;
+      let totalFollowersNumber;
+
+      if (platforms) {
+        platformsData = platforms.map((platform) => ({
+          platformId: platform.platformId,
+          followers: platform.followers,
+          link: platform.link,
+        }));
+
+        const totalFollowers = platforms.reduce(
+          (sum, platform) => sum + BigInt(platform.followers),
+          BigInt(0)
+        );
+        totalFollowersNumber = Number(totalFollowers);
+      }
 
       // Delete old images
       if (
