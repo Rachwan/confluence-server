@@ -38,6 +38,7 @@ const corsOption = {
     "http://localhost:3000",
     "http://localhost:3001",
     "https://confluence-client.vercel.app",
+    "https://confluence-dashborad.vercel.app",
     "https://confluence-server.onrender.com",
   ],
   credentials: true,
